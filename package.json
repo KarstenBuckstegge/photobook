@@ -1,0 +1,28 @@
+{
+  "name": "photobook",
+  "version": "0.0.1",
+  "description": "photobook",
+  "main": "app.js",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:KarstenBuckstegge/photobook.git"
+  },
+  "author": {
+    "name": "Karsten Buckstegge",
+    "email": "k.buckstegge@gmail.com"
+  },
+  "devDependencies": {
+    "babel": "^5.8.23",
+    "babel-eslint": "^4.1.1",
+    "boilerplate-server": "^0.9.7",
+    "eslint": "^1.3.1"
+  },
+  "scripts": {
+    "start": "boilerplate-server",
+    "console": "boilerplate-console",
+    "watch": "npm run babel -- --watch",
+    "babel": "npm run clean && babel source --out-dir ./ --source-maps inline",
+    "clean": "rm -rf application binary configuration library"
+  }
+}
