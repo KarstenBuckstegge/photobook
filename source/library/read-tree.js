@@ -3,18 +3,113 @@ import fs from 'fs';
 function readTree(root) {
 
   fs.readdir(root, function(err, fileNames) {
-    let dir = [];
-    for(let fileName of fileNames) {
-      let filePath = `${root}/${fileName}`;
-      fs.stat(filePath, function(err, fileStats) {
-        console.log(`Is ${fileName} a directory? ${fileStats.isDirectory()}`);
-        // console.log(arguments);
-      });
+    if(err) {
+      console.error(`Something went wrong in parentDir: ${err}`);
     }
+
+    let images = [];
+    let iterationCount = 0;
+
+    for(let fileName of fileNames) {
+      // ignore hidden Files
+      if(fileName.startsWith('.')) {
+        continue;
+      }
+      let filePath = `${root}${fileName}`;
+
+      // create Node for file or directory
+      let branch = {
+        name: fileName,
+        path: filePath
+      };
+
+      fs.stat(filePath, function(err, fileStat) {
+        if(err) {
+          console.error(`Something went wrong in parentStats: ${err}`);
+        }
+
+        // CHILD DIRECTORY
+        if(!fileStat.isDirectory()){
+          branch.type = 'file';
+        }
+        if(fileStat.isDirectory()) {
+          console.log(`${fileName} is a directory!
+          `);
+
+          branch.type = 'directory';
+          let childNode = [];
+
+          fs.readdir(filePath, function(err, childFileNames) {
+
+            if(err) {
+              console.error(`Something went wrong in childDir: ${err}`);
+            }
+
+            // loop over children
+            for(let childFileName of childFileNames) {
+
+              let childFilePath = `${filePath}/${childFileName}`;
+
+              fs.stat(childFilePath, function(err, childFileStat) {
+                if(err) {
+                  console.error(`Something went wrong in childStats: ${err}`);
+                }
+
+                // only one level of child content is allowed
+                if(childFileStat.isFile()) {
+                  console.log(`Writing file ${childFileName} to childNode
+                  `);
+                  let childContent = {
+                    name: childFileName,
+                    path: childFilePath,
+                    type: 'file'
+                  }
+                  childNode.push(childContent);
+                }
+              });
+            }
+          });
+
+          branch.children = childNode;
+        }
+        else {
+          console.log(`${fileName} is a file
+          `);
+
+          branch.type = 'file';
+        }
+      });
+
+      images.push(branch);
+    }
+
+    let finisher = setInterval( function(){
+      if(++iterationCount == fileNames.length) {
+        console.log(images);
+        clearInterval(finisher);
+      }
+    }, 200);
 
   })
 
 }
+
+var images = [
+  {
+    name: 'foo.jpg',
+    type: 'file'
+  },
+  {
+    name: 'kong',
+    type: 'directory',
+    children: [
+      {
+        name: 'foo.png',
+        type: 'file'
+      }
+    ]
+  }
+]
 
 
 export default readTree;
