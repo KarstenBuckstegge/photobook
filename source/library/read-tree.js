@@ -11,13 +11,13 @@ function readTree(root) {
     let iterationCount = 0;
 
     for(let fileName of fileNames) {
-      // ignore hidden Files
+      // ignore hidden files
       if(fileName.startsWith('.')) {
         continue;
       }
       let filePath = `${root}${fileName}`;
 
-      // create Node for file or directory
+      // create node for file or directory
       let branch = {
         name: fileName,
         path: filePath
@@ -29,10 +29,10 @@ function readTree(root) {
         }
 
         // CHILD DIRECTORY
-        if(!fileStat.isDirectory()){
+        if(fileStat && !fileStat.isDirectory()){
           branch.type = 'file';
         }
-        if(fileStat.isDirectory()) {
+        if(fileStat && fileStat.isDirectory()) {
           console.log(`${fileName} is a directory!
           `);
 
