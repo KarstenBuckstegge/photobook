@@ -85,31 +85,13 @@ function readTree(root) {
 
     let finisher = setInterval( function(){
       if(++iterationCount == fileNames.length) {
-        console.log(images);
         clearInterval(finisher);
+        console.log(images);
       }
     }, 200);
 
   })
-
 }
-
-var images = [
-  {
-    name: 'foo.jpg',
-    type: 'file'
-  },
-  {
-    name: 'kong',
-    type: 'directory',
-    children: [
-      {
-        name: 'foo.png',
-        type: 'file'
-      }
-    ]
-  }
-]
 
 
 export default readTree;
