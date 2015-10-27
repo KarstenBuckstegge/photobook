@@ -1,6 +1,7 @@
 import fs from 'fs';
 
-function readTree(root) {
+function readTree(root, callback) {
+  let result;
 
   fs.readdir(root, function(err, fileNames) {
     if(err) {
@@ -83,13 +84,12 @@ function readTree(root) {
       images.push(branch);
     }
 
-    let finisher = setInterval( function(){
+    var finisher = setInterval( function() {
       if(++iterationCount == fileNames.length) {
         clearInterval(finisher);
-        console.log(images);
+        result = callback(null, images);
       }
     }, 200);
-
   })
 }
 
