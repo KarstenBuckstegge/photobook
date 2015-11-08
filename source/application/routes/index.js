@@ -15,7 +15,7 @@ export default function bookRouteFactory (application) {
 
 	return async function bookRoute () {
 		try {
-			const results = await promiseReadTree('./static/images/');
+			const results = await promiseReadTree('./static/images');
 			this.body = results;
 			return results;
 		} catch (err) {

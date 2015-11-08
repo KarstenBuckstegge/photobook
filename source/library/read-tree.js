@@ -108,11 +108,21 @@ const getFileType = (filePath, fileName, callback) => {
         Error: ${err}`);
     }
 
+    let fileNode = {
+      name: fileName,
+      path: filePath
+    }
+
     if(fileStat && !fileStat.isDirectory()){
-      callback(null, 'file');
+      fileNode.type = 'file';
+      callback(null, fileNode);
     }
     else {
-      callback(null, 'directory', filePath);
+      fileNode.type = 'directory';
+      getDirectoryContent(filePath, true, function(err, res) {
+        fileNode.children = res;
+        callback(null, fileNode);
+      });
     }
   });
 }
@@ -123,40 +133,32 @@ const getFileType = (filePath, fileName, callback) => {
 *
 */
 const getFileData = (root, fileNames, callback) => {
-  let res = [];
+  let fileNodes = [];
+  let ignoredFiles = 0;
 
-  for(let fileName of fileNames) {
+  fileNames.forEach( (fileName, index) => {
     // ignore hidden files
     if(fileName.startsWith('.')) {
-      continue;
+      ignoredFiles++;
+      return;
     }
 
     let filePath = `${root}/${fileName}`;
 
-    getFileType(filePath, fileName, function(err, res, filePath) {
+    getFileType(filePath, fileName, function(err, res) {
       if(err) {
         return console.error(
           `An error occured:
           ${err}`);
       }
-      if(res === 'directory') {
-        getDirectoryContent(filePath, true, function(err, res) {
-          callback(null, res);
-        });
-      }
-      else {
-        callback(null, res);
+
+      fileNodes.push(res);
+
+      if((fileNodes.length + ignoredFiles) === fileNames.length) {
+        callback(null, fileNodes);
       }
     })
-
-    // create node for file or directory
-    res.push({
-      name: fileName,
-      path: filePath
-    });
-  }
-
-  callback(null, res);
+  })
 }
 
 /**
