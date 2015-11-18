@@ -25,7 +25,7 @@ const getFileType = (filePath, fileName, callback) => {
 
     if(fileStat && !fileStat.isDirectory()){
       fileNode.type = 'file';
-      return callback(null, fileNode);
+      callback(null, fileNode);
     }
     else {
       fileNode.type = 'directory';
@@ -37,7 +37,7 @@ const getFileType = (filePath, fileName, callback) => {
         }
 
         fileNode.children = res;
-        return callback(null, fileNode);
+        callback(null, fileNode);
       });
     }
   });
@@ -71,7 +71,7 @@ const getFileData = (root, fileNames, callback) => {
       fileNodes.push(res);
 
       if((fileNodes.length + ignoredFiles) === fileNames.length) {
-        return callback(null, fileNodes);
+        callback(null, fileNodes);
       }
     })
   })
@@ -91,7 +91,7 @@ const getDirectoryContent = (path, isChild, callback) => {
     }
 
     getFileData(path, fileNames, function(err, res) {
-      return callback(null, res);
+      callback(null, res);
     })
   })
 }
@@ -103,7 +103,7 @@ const getDirectoryContent = (path, isChild, callback) => {
 */
 const readTree = (root, callback) => {
   getDirectoryContent(root, false, function(err, res) {
-    return callback(null, res);
+    callback(null, res);
   });
 }
 
