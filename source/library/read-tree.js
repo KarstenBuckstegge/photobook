@@ -13,8 +13,8 @@ import fs from 'fs';
 const getFileType = (filePath, fileName, callback) => {
   fs.stat(filePath, function(err, fileStat) {
     if(err) {
-      console.error(
-        `Could not determin file type
+      return console.error(
+        `Could not determin file type.
         Error: ${err}`);
     }
 
@@ -25,13 +25,19 @@ const getFileType = (filePath, fileName, callback) => {
 
     if(fileStat && !fileStat.isDirectory()){
       fileNode.type = 'file';
-      callback(null, fileNode);
+      return callback(null, fileNode);
     }
     else {
       fileNode.type = 'directory';
       getDirectoryContent(filePath, true, function(err, res) {
+        if(err) {
+          return console.error(
+            `Could not get directory content.
+            Error: ${err}`);
+        }
+
         fileNode.children = res;
-        callback(null, fileNode);
+        return callback(null, fileNode);
       });
     }
   });
@@ -65,7 +71,7 @@ const getFileData = (root, fileNames, callback) => {
       fileNodes.push(res);
 
       if((fileNodes.length + ignoredFiles) === fileNames.length) {
-        callback(null, fileNodes);
+        return callback(null, fileNodes);
       }
     })
   })
@@ -85,7 +91,7 @@ const getDirectoryContent = (path, isChild, callback) => {
     }
 
     getFileData(path, fileNames, function(err, res) {
-      callback(null, res);
+      return callback(null, res);
     })
   })
 }
@@ -97,7 +103,7 @@ const getDirectoryContent = (path, isChild, callback) => {
 */
 const readTree = (root, callback) => {
   getDirectoryContent(root, false, function(err, res) {
-    callback(null, res);
+    return callback(null, res);
   });
 }
 
