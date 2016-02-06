@@ -11,26 +11,25 @@ import fs from 'fs';
 *
 */
 const getFileType = (filePath, fileName, callback) => {
-  fs.stat(filePath, function(err, fileStat) {
-    if(err) {
+  fs.stat(filePath, (err, fileStat) => {
+    if (err) {
       return console.error(
         `Could not determin file type.
         Error: ${err}`);
     }
 
-    let fileNode = {
+    const fileNode = {
       name: fileName,
       path: filePath
-    }
+    };
 
-    if(fileStat && !fileStat.isDirectory()){
+    if (fileStat && !fileStat.isDirectory()) {
       fileNode.type = 'file';
       callback(null, fileNode);
-    }
-    else {
+    } else {
       fileNode.type = 'directory';
-      getDirectoryContent(filePath, true, function(err, res) {
-        if(err) {
+      getDirectoryContent(filePath, true, (err, res) => {
+        if (err) {
           return console.error(
             `Could not get directory content.
             Error: ${err}`);
@@ -41,7 +40,7 @@ const getFileType = (filePath, fileName, callback) => {
       });
     }
   });
-}
+};
 
 /**
 *
@@ -49,20 +48,20 @@ const getFileType = (filePath, fileName, callback) => {
 *
 */
 const getFileData = (root, fileNames, callback) => {
-  let fileNodes = [];
+  const fileNodes = [];
   let ignoredFiles = 0;
 
-  fileNames.forEach( (fileName, index) => {
+  fileNames.forEach(fileName => {
     // ignore hidden files
-    if(fileName.startsWith('.')) {
+    if (fileName.startsWith('.')) {
       ignoredFiles++;
       return;
     }
 
-    let filePath = `${root}/${fileName}`;
+    const filePath = `${root}/${fileName}`;
 
-    getFileType(filePath, fileName, function(err, res) {
-      if(err) {
+    getFileType(filePath, fileName, (err, res) => {
+      if (err) {
         return console.error(
           `An error occured:
           ${err}`);
@@ -70,12 +69,12 @@ const getFileData = (root, fileNames, callback) => {
 
       fileNodes.push(res);
 
-      if((fileNodes.length + ignoredFiles) === fileNames.length) {
+      if ((fileNodes.length + ignoredFiles) === fileNames.length) {
         callback(null, fileNodes);
       }
-    })
-  })
-}
+    });
+  });
+};
 
 /**
 *
@@ -84,17 +83,20 @@ const getFileData = (root, fileNames, callback) => {
 */
 const getDirectoryContent = (path, isChild, callback) => {
   fs.readdir(path, (err, fileNames) => {
-    if(err) {
+    if (err) {
       console.error(
         `could not read directory: ${path}
         Error: ${err}`);
     }
 
-    getFileData(path, fileNames, function(err, res) {
+    getFileData(path, fileNames, (err, res) => {
+      if (err) {
+        console.error(`An error occured in getFileData: ${err}`);
+      }
       callback(null, res);
-    })
-  })
-}
+    });
+  });
+};
 
 /**
 *
@@ -102,9 +104,12 @@ const getDirectoryContent = (path, isChild, callback) => {
 *
 */
 const readTree = (root, callback) => {
-  getDirectoryContent(root, false, function(err, res) {
+  getDirectoryContent(root, false, (err, res) => {
+    if (err) {
+      console.error(`An error occured in readTree: ${err}`);
+    }
     callback(null, res);
   });
-}
+};
 
 export default readTree;
