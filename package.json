@@ -31,5 +31,8 @@
     "watch": "npm run babel -- --watch",
     "babel": "npm run clean && babel source --out-dir ./ --source-maps inline",
     "clean": "rm -rf application binary configuration library"
+  },
+  "dependencies": {
+    "async": "^1.5.2"
   }
 }
