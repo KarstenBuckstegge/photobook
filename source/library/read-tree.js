@@ -28,7 +28,7 @@ const getFileType = (filePath, fileName, callback) => {
       callback(null, fileNode);
     } else {
       fileNode.type = 'directory';
-      getDirectoryContent(filePath, (err, res) => {
+      getDirectoryContent(filePath, (err, res) => { // eslint-disable-line no-use-before-define
         if (err) {
           return console.error(
             `Could not get directory content.
