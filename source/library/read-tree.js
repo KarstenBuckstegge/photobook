@@ -28,7 +28,7 @@ const getFileType = (filePath, fileName, callback) => {
       callback(null, fileNode);
     } else {
       fileNode.type = 'directory';
-      getDirectoryContent(filePath, true, (err, res) => {
+      getDirectoryContent(filePath, (err, res) => {
         if (err) {
           return console.error(
             `Could not get directory content.
@@ -81,7 +81,7 @@ const getFileData = (root, fileNames, callback) => {
 * Get the content from a directory
 *
 */
-const getDirectoryContent = (path, isChild, callback) => {
+const getDirectoryContent = (path, callback) => {
   fs.readdir(path, (err, fileNames) => {
     if (err) {
       console.error(
@@ -100,11 +100,11 @@ const getDirectoryContent = (path, isChild, callback) => {
 
 /**
 *
-* EXPORTS
+* DEFAULT EXPORT
 *
 */
 const readTree = (root, callback) => {
-  getDirectoryContent(root, false, (err, res) => {
+  getDirectoryContent(root, (err, res) => {
     if (err) {
       console.error(`An error occured in readTree: ${err}`);
     }

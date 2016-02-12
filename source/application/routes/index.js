@@ -18,8 +18,8 @@ export default function bookRouteFactory() {
       this.body = results;
       return results;
     } catch (err) {
-      console.log('woot');
-      this.body = 'woot';
+      console.log(`Something failed miserably in bookRoute: ${err}`);
+      this.body = 'We\'ll something didn\'t work I guess...';
     }
   };
 }
