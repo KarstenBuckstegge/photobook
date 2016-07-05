@@ -13,7 +13,7 @@
     "email": "k.buckstegge@gmail.com"
   },
   "devDependencies": {
-    "babel": "^6.3.26",
+    "babel": "^6.5.1",
     "babel-cli": "^6.4.5",
     "babel-eslint": "^4.1.1",
     "babel-plugin-add-module-exports": "^0.1.2",
